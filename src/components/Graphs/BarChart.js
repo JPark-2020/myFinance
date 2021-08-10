@@ -1,6 +1,5 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import './BarChart.css';
 
 
 // This Chart is for daily $ spent and will juxtapose previous week

@@ -1,0 +1,25 @@
+.dashboard__main {
+    background: #e9e9e9;
+    min-height: 100vh;
+    width: 100%; 
+}
+
+.dashboard__content{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around;
+    margin: 40px auto 0;  
+    flex-wrap: wrap; 
+}
+
+.dashboard__chart {
+    box-shadow: 0 50px 70px -20px rgba(0,0,0,0.8);
+    width: 23vw;
+    height: 450px; 
+    padding: 30px; 
+    border: 2px solid black; 
+    display: flex;
+    align-items: center; 
+    justify-content:center;
+    margin-top: 20px; 
+}

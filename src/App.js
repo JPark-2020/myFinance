@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Sidebar from "./components/Sidebar/Sidebar";
-// import "./App.css";
+
 
 const App = () => {
   const [user, setUser] = useState("");
@@ -84,10 +84,11 @@ const App = () => {
 
   return (
     <Router>
+    {user && <Sidebar logoutHandler={logoutHandler}/>}
       <Switch>
         <Route exact path="/">
           {user ? (
-            <Dashboard logoutHandler={logoutHandler}/>
+            <Dashboard/>
           ) : (
             <Login
               email={email}

@@ -1,5 +1,5 @@
 import { Doughnut } from "react-chartjs-2";
-import './DoughnutChart.css';
+
 
 // This Chart will show monthly expenses and Total Money 
 
