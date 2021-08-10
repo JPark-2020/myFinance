@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import fire from './util/firebase';
-import Login from "./components/Auth/Login";
-import Dashboard from './components/Dashboard/Dashboard';
-import Header from './components/Header/Header';
+import fire from "./util/firebase";
 
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
+import Login from "./components/Auth/Login";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Sidebar from "./components/Sidebar/Sidebar";
 // import "./App.css";
 
 const App = () => {
@@ -81,24 +83,42 @@ const App = () => {
   }, []);
 
   return (
-    <React.Fragment>
-      {user ? (
-        <Header logoutHandler={logoutHandler} />
-      ) : (
-        <Login
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          loginHandler={loginHandler}
-          signupHandler={signupHandler}
-          hasAccount={hasAccount}
-          setHasAccount={setHasAccount}
-          emailError={emailError}
-          passwordError={passwordError}
-        />
-      )}
-    </React.Fragment>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          {user ? (
+            <Dashboard logoutHandler={logoutHandler}/>
+          ) : (
+            <Login
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              loginHandler={loginHandler}
+              signupHandler={signupHandler}
+              hasAccount={hasAccount}
+              setHasAccount={setHasAccount}
+              emailError={emailError}
+              passwordError={passwordError}
+            />
+          )}
+        </Route>
+        <Route path="/login">
+          <Login
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            loginHandler={loginHandler}
+            signupHandler={signupHandler}
+            hasAccount={hasAccount}
+            setHasAccount={setHasAccount}
+            emailError={emailError}
+            passwordError={passwordError}
+          />
+        </Route>
+      </Switch>
+    </Router>
   );
 };
 

@@ -1,8 +1,17 @@
-const Dashboard = () => {
-    return (
-        <h1>Hi</h1>
-    )
-}
+import BarChart from "../Graphs/BarChart";
+import DoughnutChart from "../Graphs/DoughnutChart";
+import LineChart from "../Graphs/LineChart";
+import Sidebar from "../Sidebar/Sidebar";
 
-export default Dashboard; 
+const Dashboard = props => {
+  return (
+    <div>
+      <Sidebar logoutHandler={props.logoutHandler} />
+      <BarChart />
+      <DoughnutChart />
+      <LineChart />
+    </div>
+  );
+};
 
+export default Dashboard;
