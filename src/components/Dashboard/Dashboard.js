@@ -10,6 +10,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard__main">
       <div className="dashboard__content">
+      <h1 className="dashboard__heading">Dashboard</h1>
         <div className="dashboard__chart">
           <BarChart />
         </div>

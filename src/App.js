@@ -7,6 +7,7 @@ import Login from "./components/Auth/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Sidebar from "./components/Sidebar/Sidebar";
 
+import './App.css';
 
 const App = () => {
   const [user, setUser] = useState("");
