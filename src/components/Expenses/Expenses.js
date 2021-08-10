@@ -1,20 +1,39 @@
+import { expensesCollection } from "../../util/firebase";
+import fire from "../../util/firebase";
+import React, { useState } from "react";
 const Expenses = () => {
-  const expenseItems = [
-    {
-      name: "toiletpaper",
-      cost: 29.99,
-      duedate: "3-3-21",
-    },
-    {
-      name: "Netflix",
-      cost: 15,
-      duedate: "3-30-21",
-    },
-  ];
+  //   const expenseItems = [
+  //     {
+  //       name: "toiletpaper",
+  //       cost: 29.99,
+  //       duedate: "3-3-21",
+  //     },
+  //     {
+  //       name: "Netflix",
+  //       cost: 15,
+  //       duedate: "3-30-21",
+  //     },
+  //   ];
+
+  const [expenseItems, setExpenseItems] = useState([]);
+
+
+
+  const submitHandler = async(event) => {
+      event.preventDefault();
+      const newExpense = await expensesCollection.doc("newExpense").set({
+          name: 'Los Angeles',
+          cost: '29.88',
+          duedate: '3-30-21',
+          author: fire.auth().currentUser.uid
+      })
+      setExpenseItems(newExpense);
+      console.log(expenseItems);
+  }
 
   return (
     <div>
-      <h4>Expenses</h4>
+      <h4 onClick={submitHandler}>Expenses</h4>
       <div className="expenseForm">
         <form>
           <label id="expenseName">Item Name</label>
@@ -26,13 +45,13 @@ const Expenses = () => {
         </form>
       </div>
       <div className="expenseItem">
-        {expenseItems.map((expense) => (
+        {/* {expenseItems.map((expense) => (
           <div>
             <h5>{expense.name}</h5>
             <p>{expense.cost}</p>
             <p>{expense.duedate}</p>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );

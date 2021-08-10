@@ -28,6 +28,9 @@ const Banking = () => {
                 <h3>Current Balance: {balance}</h3>
             </div>
             <div>
+                <h4>History</h4>
+            </div>
+            <div>
                 <h3>Deposit Funds</h3>
                 <form>
                     <input type="number" ref={depositRef}/>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import fire from "./util/firebase";
-
+import { usersCollection } from './util/firebase'
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/Auth/Login";
@@ -9,6 +9,8 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Banking from './components/Banking/Banking';
 import Expenses from './components/Expenses/Expenses';
 import './App.css';
+
+
 
 const App = () => {
   const [user, setUser] = useState("");
@@ -80,6 +82,7 @@ const App = () => {
     });
   };
 
+  
   useEffect(() => {
     authListener();
   }, []);
