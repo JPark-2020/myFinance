@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Sidebar from "./components/Sidebar/Sidebar";
+import Banking from './components/Banking/Banking';
 
 import './App.css';
 
@@ -105,7 +106,7 @@ const App = () => {
             />
           )}
         </Route>
-        <Route path="/banking"></Route>
+        <Route path="/banking" component={Banking}></Route>
         <Route path="/expenses"></Route>
         <Route path="/reports"></Route>
         <Route path="/login">
