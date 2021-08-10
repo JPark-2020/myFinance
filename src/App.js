@@ -7,7 +7,7 @@ import Login from "./components/Auth/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Banking from './components/Banking/Banking';
-
+import Expenses from './components/Expenses/Expenses';
 import './App.css';
 
 const App = () => {
@@ -107,7 +107,7 @@ const App = () => {
           )}
         </Route>
         <Route path="/banking" component={Banking}></Route>
-        <Route path="/expenses"></Route>
+        <Route path="/expenses" component={Expenses}></Route>
         <Route path="/reports"></Route>
         <Route path="/login">
           <Login
