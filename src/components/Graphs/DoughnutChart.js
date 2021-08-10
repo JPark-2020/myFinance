@@ -1,17 +1,17 @@
 import { Doughnut } from "react-chartjs-2";
 
-
-// This Chart will show monthly expenses and Total Money 
+// This Chart will show monthly expenses and Total Money
 
 const DoughnutChart = () => {
   const expense = {
-      rent: 500,
-      food: 200,
-      entertainment:300
-  }
-  
-    return (
+    rent: 500,
+    food: 200,
+    entertainment: 300,
+  };
+
+  return (
     <div className="doughnutChart">
+      <h4>Current Month's Expense Breakdown</h4>
       <Doughnut
         data={{
           labels: ["Rent", "Food", "Entertainment"],

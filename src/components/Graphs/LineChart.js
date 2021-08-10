@@ -5,6 +5,7 @@ import { Line } from "react-chartjs-2";
 const LineChart = () => {
   return (
     <div>
+    <h4>Net Income Tracker</h4>
       <Line
         data={{
           labels: ['jan', 'feb', 'march', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],

@@ -6,6 +6,7 @@ import { Bar } from "react-chartjs-2";
 const BarChart = () => {
   return (
     <div className="barChart">
+    <h4>Monthly Expenses/Savings</h4>
       <Bar
         data={{
           labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],

@@ -105,6 +105,9 @@ const App = () => {
             />
           )}
         </Route>
+        <Route path="/banking"></Route>
+        <Route path="/expenses"></Route>
+        <Route path="/reports"></Route>
         <Route path="/login">
           <Login
             email={email}

@@ -2,7 +2,7 @@ import BarChart from "../Graphs/BarChart";
 import DoughnutChart from "../Graphs/DoughnutChart";
 import LineChart from "../Graphs/LineChart";
 import BankBalance from '../Graphs/BankBalance';
-import Invoices from '../Graphs/Invoices';
+import Reminders from '../Graphs/Reminders';
 import DebtHelp from '../Graphs/DebtHelp';
 import "./Dashboard.css";
 
@@ -24,7 +24,7 @@ const Dashboard = () => {
           <BankBalance />
         </div>
         <div className="dashboard__chart">
-            <Invoices />
+            <Reminders />
         </div>
         <div className="dashboard__chart">
             <DebtHelp/>
