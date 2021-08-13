@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import fire from "./util/firebase";
-import { usersCollection } from './util/firebase'
+import { usersCollection } from "./util/firebase";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/Auth/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Sidebar from "./components/Sidebar/Sidebar";
-import Banking from './components/Banking/Banking';
-import Expenses from './components/Expenses/Expenses';
-import './App.css';
-
-
+import Banking from "./components/Banking/Banking";
+import Expenses from "./components/Expenses/Expenses";
+import "./App.css";
 
 const App = () => {
   const [user, setUser] = useState("");
@@ -82,52 +80,34 @@ const App = () => {
     });
   };
 
-  
   useEffect(() => {
     authListener();
   }, []);
 
+  if (user) {
+    return (
+      <Router>
+        <Sidebar logoutHandler={logoutHandler} />
+        <Switch>
+          <Route exact path="/" component={Dashboard}/>
+        </Switch>
+      </Router>
+    );
+  }
+
   return (
-    <Router>
-    {user && <Sidebar logoutHandler={logoutHandler}/>}
-      <Switch>
-        <Route exact path="/">
-          {user ? (
-            <Dashboard/>
-          ) : (
-            <Login
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              loginHandler={loginHandler}
-              signupHandler={signupHandler}
-              hasAccount={hasAccount}
-              setHasAccount={setHasAccount}
-              emailError={emailError}
-              passwordError={passwordError}
-            />
-          )}
-        </Route>
-        <Route path="/banking" component={Banking}></Route>
-        <Route path="/expenses" component={Expenses}></Route>
-        <Route path="/reports"></Route>
-        <Route path="/login">
-          <Login
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            loginHandler={loginHandler}
-            signupHandler={signupHandler}
-            hasAccount={hasAccount}
-            setHasAccount={setHasAccount}
-            emailError={emailError}
-            passwordError={passwordError}
-          />
-        </Route>
-      </Switch>
-    </Router>
+    <Login
+      email={email}
+      setEmail={setEmail}
+      password={password}
+      setPassword={setPassword}
+      loginHandler={loginHandler}
+      signupHandler={signupHandler}
+      hasAccount={hasAccount}
+      setHasAccount={setHasAccount}
+      emailError={emailError}
+      passwordError={passwordError}
+    />
   );
 };
 
