@@ -13,12 +13,6 @@ var firebaseConfig = {
 // Initialize Firebase
 const fire = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+export {fire, db};
 
-export const usersCollection = db.collection("users");
-export const monthsCollection = db.collection("months");
-export const expensesCollection = db.collection("expenses");
-export const balanceCollection = db.collection("balance");
-export const savingsCollection = db.collection("savings");
-export default fire;
 
-// const db = firebase.firestore();

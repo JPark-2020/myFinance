@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import fire from "./util/firebase";
-import { usersCollection } from "./util/firebase";
+import {fire} from "./util/firebase";
+
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/Auth/Login";

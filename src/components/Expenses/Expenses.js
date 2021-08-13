@@ -1,4 +1,3 @@
-import { expensesCollection } from "../../util/firebase";
 import fire from "../../util/firebase";
 import React, { useState } from "react";
 const Expenses = () => {
@@ -7,17 +6,20 @@ const Expenses = () => {
 
 
 
-  const submitHandler = async(event) => {
-      event.preventDefault();
-      const newExpense = await expensesCollection.doc("newExpense").set({
-          name: 'Los Angeles',
-          cost: '29.88',
-          duedate: '3-30-21',
-          author: fire.auth().currentUser.uid
-      })
-      setExpenseItems(newExpense);
-      console.log(expenseItems);
+  const submitHandler = event => {
+    console.log('hi');
   }
+  // const submitHandler = async(event) => {
+  //     event.preventDefault();
+  //     const newExpense = await expensesCollection.doc("newExpense").set({
+  //         name: 'Los Angeles',
+  //         cost: '29.88',
+  //         duedate: '3-30-21',
+  //         author: fire.auth().currentUser.uid
+  //     })
+  //     setExpenseItems(newExpense);
+  //     console.log(expenseItems);
+  // }
 
   return (
     <div>
