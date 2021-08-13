@@ -90,6 +90,8 @@ const App = () => {
         <Sidebar logoutHandler={logoutHandler} />
         <Switch>
           <Route exact path="/" component={Dashboard}/>
+          <Route path="/expenses" component={Expenses}/>
+          <Route path="/banking" component={Banking}/>
         </Switch>
       </Router>
     );

@@ -2,18 +2,6 @@ import { expensesCollection } from "../../util/firebase";
 import fire from "../../util/firebase";
 import React, { useState } from "react";
 const Expenses = () => {
-  //   const expenseItems = [
-  //     {
-  //       name: "toiletpaper",
-  //       cost: 29.99,
-  //       duedate: "3-3-21",
-  //     },
-  //     {
-  //       name: "Netflix",
-  //       cost: 15,
-  //       duedate: "3-30-21",
-  //     },
-  //   ];
 
   const [expenseItems, setExpenseItems] = useState([]);
 
