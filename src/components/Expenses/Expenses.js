@@ -1,47 +1,68 @@
-import fire from "../../util/firebase";
-import React, { useState } from "react";
+import { db, fire } from "../../util/firebase";
+import React, { useState, useEffect, useRef } from "react";
 const Expenses = () => {
-
   const [expenseItems, setExpenseItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const expenseName = useRef();
+  const expenseCost = useRef();
+  const expenseDate = useRef();
 
+  const submitHandler = (event) => {
+    event.preventDefault();
 
-  const submitHandler = event => {
-    console.log('hi');
-  }
-  // const submitHandler = async(event) => {
-  //     event.preventDefault();
-  //     const newExpense = await expensesCollection.doc("newExpense").set({
-  //         name: 'Los Angeles',
-  //         cost: '29.88',
-  //         duedate: '3-30-21',
-  //         author: fire.auth().currentUser.uid
-  //     })
-  //     setExpenseItems(newExpense);
-  //     console.log(expenseItems);
-  // }
+    const formData = {
+      name: expenseName.current.value,
+      cost: expenseCost.current.value,
+      dueDate: expenseDate.current.value,
+      author: fire.auth().currentUser.uid,
+    };
+
+    db.collection("Expenses").add(formData);
+  };
+
+  useEffect(() => {
+    const getExpenses = [];
+    const subscriber = db.collection("Expenses").onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        getExpenses.push({
+          ...doc.data(),
+          key: doc.id,
+        });
+      });
+      setExpenseItems(getExpenses);
+      setLoading(false);
+    });
+    return () => subscriber();
+  }, [loading]);
 
   return (
     <div>
-      <h4 onClick={submitHandler}>Expenses</h4>
+      <h4>Expenses</h4>
       <div className="expenseForm">
-        <form>
+        <form onSubmit={submitHandler}>
           <label id="expenseName">Item Name</label>
-          <input htmlFor="expenseName" type="text" />
+          <input htmlFor="expenseName" type="text" ref={expenseName} />
           <label id="expenseCost">Item Cost</label>
-          <input htmlFor="expenseCost" type="Number" />
+          <input
+            htmlFor="expenseCost"
+            step="0.01"
+            type="Number"
+            ref={expenseCost}
+          />
           <label id="expenseDate">Date Due</label>
-          <input htmlFor="expenseDate" type="date" />
+          <input htmlFor="expenseDate" type="date" ref={expenseDate} />
+          <button type="submit">Submit</button>
         </form>
       </div>
-      <div className="expenseItem">
-        {/* {expenseItems.map((expense) => (
-          <div>
+      <div className="expenseItems">
+        {expenseItems.map((expense) => (
+          <div key={expense.key}>
             <h5>{expense.name}</h5>
             <p>{expense.cost}</p>
-            <p>{expense.duedate}</p>
+            <p>{expense.dueDate}</p>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
