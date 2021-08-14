@@ -1,71 +1,97 @@
 import { db, fire } from "../../util/firebase";
 import React, { useState, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 const Expenses = () => {
-  const [expenseItems, setExpenseItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [expenseName, setExpenseName] = useState("");
+  const [expenseCost, setExpenseCost] = useState("");
+  const [expenseDate, setExpenseDate] = useState("");
 
-  const expenseName = useRef();
-  const expenseCost = useRef();
-  const expenseDate = useRef();
+  const ref = db.collection("expenses");
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-
-    const formData = {
-      name: expenseName.current.value,
-      cost: expenseCost.current.value,
-      dueDate: expenseDate.current.value,
-      author: fire.auth().currentUser.uid,
-    };
-
-    db.collection("Expenses").add(formData);
-  };
-
-  useEffect(() => {
-    const getExpenses = [];
-    const subscriber = db.collection("Expenses").onSnapshot((querySnapshot) => {
+  function getExpenses() {
+    setLoading(true);
+    ref.onSnapshot((querySnapshot) => {
+      const expenseItems = [];
       querySnapshot.forEach((doc) => {
-        getExpenses.push({
-          ...doc.data(),
-          key: doc.id,
-        });
+        expenseItems.push(doc.data());
       });
-      setExpenseItems(getExpenses);
+      setExpenses(expenseItems);
       setLoading(false);
     });
-    return () => subscriber();
-  }, [loading]);
+  }
+
+  useEffect(() => {
+    getExpenses();
+  }, []);
+
+  function addExpense(newExpense) {
+    ref.doc(newExpense.id).set(newExpense).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  function deleteExpense(expense) {
+    ref
+      .doc(expense.id)
+      .delete()
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const expenseSubmitHandler = (event) => {
+    event.preventDefault();
+    addExpense({
+      name: expenseName,
+      cost: expenseCost,
+      date: expenseDate,
+      id: uuidv4(),
+      author: fire.auth().currentUser.uid,
+    });
+  };
+
+
 
   return (
     <div>
-      <h4>Expenses</h4>
-      <div className="expenseForm">
-        <form onSubmit={submitHandler}>
-          <label id="expenseName">Item Name</label>
-          <input htmlFor="expenseName" type="text" ref={expenseName} />
-          <label id="expenseCost">Item Cost</label>
-          <input
-            htmlFor="expenseCost"
-            step="0.01"
-            type="Number"
-            ref={expenseCost}
-          />
-          <label id="expenseDate">Date Due</label>
-          <input htmlFor="expenseDate" type="date" ref={expenseDate} />
-          <button type="submit">Submit</button>
-        </form>
+      <h1>Expenses</h1>
+      <div>
+        <h3>Add New Expense</h3>
+        <input
+          type="text"
+          value={expenseName}
+          onChange={(e) => setExpenseName(e.target.value)}
+        />
+        <input
+          type="number"
+          value={expenseCost}
+          onChange={(e) => setExpenseCost(e.target.value)}
+        />
+        <input
+          type="date"
+          value={expenseDate}
+          onChange={(e) => setExpenseDate(e.target.value)}
+        />
+        <button onClick={expenseSubmitHandler}>Add Expense</button>
       </div>
-      <div className="expenseItems">
-        {expenseItems.map((expense) => (
-          <div key={expense.key}>
-            <h5>{expense.name}</h5>
-            <p>{expense.cost}</p>
-            <p>{expense.dueDate}</p>
+      <hr />
+      {loading ? <h1>Loading....</h1> : null}
+      {expenses.map((expense) => (
+        <div key={expense.id}>
+          <div>
+            <h3>{expense.name}</h3>
+            <p>${expense.cost}</p>
+            <p>{expense.date}</p>
           </div>
-        ))}
-      </div>
+          <div>
+            <button onClick={() => deleteExpense(expense)}>X</button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
-
 export default Expenses;
