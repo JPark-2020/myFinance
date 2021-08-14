@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const Banking = () => {
   const [balance, setBalance] = useState();
-  const [bankingItems, setBankingItems] = useState();
+  const [bankingItems, setBankingItems] = useState([]);
   const [withdraw, setWithdraw] = useState();
   const [deposit, setDeposit] = useState();
   const [loading, setLoading] = useState(false);
@@ -46,9 +46,9 @@ const Banking = () => {
     getBankingHistory();
   }, []);
 
-  //   useEffect(() => {
-  //       getBankingHistory();
-  //   }, [bankingItems])
+    // useEffect(() => {
+    //     getBankingHistory();
+    // }, [bankingItems])
 
   function changeBalance(updateBalance) {
     ref
@@ -162,7 +162,7 @@ const Banking = () => {
           {bankingItems.map((item) => (
             <div>
               <h3>{item.date}</h3>
-              {item.deposit ? <p className="transaction__deposit">${item.amount}</p> : <p p className="transaction__withdrawal">${item.amount}</p>}
+              {item.deposit ? <p className="transaction__deposit">${item.amount}</p> : <p className="transaction__withdrawal">${item.amount}</p>}
             </div>
           ))}
         </div>
