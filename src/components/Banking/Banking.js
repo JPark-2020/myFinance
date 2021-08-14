@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fire, db } from "../../util/firebase";
+import { v4 as uuidv4 } from "uuid";
 
 const Banking = () => {
   const [balance, setBalance] = useState();
@@ -7,8 +8,10 @@ const Banking = () => {
   const [withdraw, setWithdraw] = useState();
   const [deposit, setDeposit] = useState();
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState();
 
   const ref = db.collection("userbalance");
+  const ref2 = db.collection("transactions");
 
   function getUserBalance() {
     setLoading(true);
@@ -28,7 +31,7 @@ const Banking = () => {
 
   function getBankingHistory() {
     setLoading(true);
-    ref.orderBy("date", "desc").onSnapshot((querySnapshot) => {
+    ref2.orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -40,47 +43,26 @@ const Banking = () => {
 
   useEffect(() => {
     getUserBalance();
+    getBankingHistory();
   }, []);
 
-  //   function updateBalance(balanceData) {
-  //     ref
-  //       .doc(updateBalance.id)
-  //       .set({
-  //           balance: balanceData.balance,
-  //           id: balanceData.id
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-
-  //   const addBalanceHandler = (event) => {
-  //     event.preventDefault();
-
-  //     const additionalBalance = balance
-  //       ? parseInt(balance) + parseInt(deposit)
-  //       : parseInt(deposit);
-  //     updateBalance({
-  //       balance: additionalBalance,
-  //       id: fire.auth().currentUser.uid,
-  //     });
-  //     setBalance(additionalBalance);
-  //   };
-
-  //   const withdrawBalanceHandler = (event) => {
-  //     event.preventDefault();
-  //     const removeBalance = parseInt(balance) - parseInt(withdraw);
-  //     updateBalance({
-  //       balance: removeBalance,
-  //       id: fire.auth().currentUser.uid,
-  //     });
-  //     setBalance(removeBalance);
-  //   };
+  //   useEffect(() => {
+  //       getBankingHistory();
+  //   }, [bankingItems])
 
   function changeBalance(updateBalance) {
     ref
       .doc(updateBalance.id)
       .set(updateBalance)
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function addTransactions(transaction) {
+    ref2
+      .doc(transaction.id)
+      .set(transaction)
       .catch((err) => {
         console.log(err);
       });
@@ -92,6 +74,15 @@ const Banking = () => {
     const additionalBalance = balance
       ? parseInt(balance) + parseInt(deposit)
       : parseInt(deposit);
+
+    addTransactions({
+      amount: deposit,
+      deposit: true,
+      date: date,
+      id: uuidv4(),
+      user: fire.auth().currentUser.uid,
+    });
+
     changeBalance({
       balance: additionalBalance,
       id: fire.auth().currentUser.uid,
@@ -100,15 +91,24 @@ const Banking = () => {
   };
 
   const withdrawBalanceHandler = (event) => {
-      event.preventDefault();
+    event.preventDefault();
 
-      const newBalance = parseInt(balance) - parseInt(withdraw);
-      changeBalance({
-          balance: newBalance,
-          id: fire.auth().currentUser.uid
-      })
-      setBalance(newBalance);
-  }
+    const newBalance = parseInt(balance) - parseInt(withdraw);
+
+    addTransactions({
+      amount: withdraw,
+      deposit: false,
+      date: date,
+      id: uuidv4(),
+      user: fire.auth().currentUser.uid,
+    });
+
+    changeBalance({
+      balance: newBalance,
+      id: fire.auth().currentUser.uid,
+    });
+    setBalance(newBalance);
+  };
 
   return (
     <React.Fragment>
@@ -126,6 +126,12 @@ const Banking = () => {
             onChange={(e) => setDeposit(e.target.value)}
           />
           <label>Amount</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <label>Date</label>
           <button type="submit">Deposit Funds</button>
         </form>
       </div>
@@ -139,6 +145,12 @@ const Banking = () => {
             onChange={(e) => setWithdraw(e.target.value)}
           />
           <label>Amount</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <label>Date</label>
           <button type="submit">Withdraw Funds</button>
         </form>
       </div>
@@ -146,6 +158,14 @@ const Banking = () => {
       <br />
       <div>
         <h4>History</h4>
+        <div>
+          {bankingItems.map((item) => (
+            <div>
+              <h3>{item.date}</h3>
+              {item.deposit ? <p className="transaction__deposit">${item.amount}</p> : <p p className="transaction__withdrawal">${item.amount}</p>}
+            </div>
+          ))}
+        </div>
       </div>
     </React.Fragment>
   );
