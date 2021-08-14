@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { fire, db } from "../../util/firebase";
 import { v4 as uuidv4 } from "uuid";
 
+// Note if savings is ticked it returns false -> queries have been adjusted to reflect this
+
 const Banking = () => {
   const [balance, setBalance] = useState();
   const [bankingItems, setBankingItems] = useState([]);
@@ -9,7 +11,7 @@ const Banking = () => {
   const [deposit, setDeposit] = useState();
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState();
-
+  const [savings, setSavings] = useState(false);
   const ref = db.collection("userbalance");
   const ref2 = db.collection("transactions");
 
@@ -76,12 +78,15 @@ const Banking = () => {
     const additionalBalance = balance
       ? parseInt(balance) + parseInt(deposit)
       : parseInt(deposit);
-
-    addTransactions({
+// issue with checkbox
+      let oppositeSavings = !savings; 
+    
+      addTransactions({
       amount: deposit,
       deposit: true,
       date: date,
       id: uuidv4(),
+      savings: oppositeSavings,
       user: fire.auth().currentUser.uid,
     });
 
@@ -90,8 +95,8 @@ const Banking = () => {
       id: fire.auth().currentUser.uid,
     });
     setBalance(additionalBalance);
-    setDeposit('');
-    setDate('');
+    setDeposit("");
+    setDate("");
   };
 
   const withdrawBalanceHandler = (event) => {
@@ -113,6 +118,12 @@ const Banking = () => {
     });
     setBalance(newBalance);
   };
+
+  const savingsHandler = event => {
+      event.preventDefault();
+      setSavings(!savings);
+      console.log(savings);
+  }
 
   return (
     <React.Fragment>
@@ -138,6 +149,13 @@ const Banking = () => {
             required
           />
           <label>Date</label>
+          <input
+            type="checkbox"
+            value={savings}
+            checked={savings}
+            onClick={savingsHandler}
+          />
+          <label>Savings?</label>
           <button type="submit">Deposit Funds</button>
         </form>
       </div>

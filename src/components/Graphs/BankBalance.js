@@ -1,4 +1,10 @@
+import React, { useState, useEffect} from 'react';
+import {db} from '../../util/firebase';
+
 const BankBalance = () => {
+
+    const [balance, setBalance] = useState();
+    
     return (
         <div>
             <h3>BANK ACCOUNTS</h3>
