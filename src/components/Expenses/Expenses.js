@@ -8,12 +8,13 @@ const Expenses = () => {
   const [expenseName, setExpenseName] = useState("");
   const [expenseCost, setExpenseCost] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState("");
+
   const ref = db.collection("expenses");
 
   function getExpenses() {
     setLoading(true);
-    ref.orderBy("date", "desc").onSnapshot((querySnapshot) => {
+    ref.where("author", "==", fire.auth().currentUser.uid).orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const expenseItems = [];
       querySnapshot.forEach((doc) => {
         expenseItems.push(doc.data());
@@ -69,18 +70,21 @@ const Expenses = () => {
           type="text"
           value={expenseName}
           onChange={(e) => setExpenseName(e.target.value)}
+          required
         />
         <label>Expense Amount</label>
         <input
           type="number"
           value={expenseCost}
           onChange={(e) => setExpenseCost(e.target.value)}
+          required
         />
         <label>Date Incurred</label>
         <input
           type="date"
           value={expenseDate}
           onChange={(e) => setExpenseDate(e.target.value)}
+          required
         />
         <label htmlFor="categories">Category</label>
         <select id="categories" onChange={(e) => setCategory(e.target.value)}>
@@ -97,7 +101,7 @@ const Expenses = () => {
         <button onClick={expenseSubmitHandler}>Add Expense</button>
       </div>
       <hr />
-      {loading ? <h1>Loading....</h1> : null}
+      
       {expenses.map((expense) => (
         <div key={expense.id}>
           <div>

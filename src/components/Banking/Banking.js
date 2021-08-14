@@ -31,7 +31,7 @@ const Banking = () => {
 
   function getBankingHistory() {
     setLoading(true);
-    ref2.orderBy("date", "desc").onSnapshot((querySnapshot) => {
+    ref2.where("user", "==", fire.auth().currentUser.uid).orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -43,12 +43,12 @@ const Banking = () => {
 
   useEffect(() => {
     getUserBalance();
-    getBankingHistory();
+    
   }, []);
 
-    // useEffect(() => {
-    //     getBankingHistory();
-    // }, [bankingItems])
+    useEffect(() => {
+        getBankingHistory();
+    }, [bankingItems])
 
   function changeBalance(updateBalance) {
     ref
@@ -124,12 +124,14 @@ const Banking = () => {
             type="number"
             value={deposit}
             onChange={(e) => setDeposit(e.target.value)}
+            required
           />
           <label>Amount</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            required
           />
           <label>Date</label>
           <button type="submit">Deposit Funds</button>
@@ -143,12 +145,14 @@ const Banking = () => {
             value={withdraw}
             max={balance}
             onChange={(e) => setWithdraw(e.target.value)}
+            required
           />
           <label>Amount</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            required
           />
           <label>Date</label>
           <button type="submit">Withdraw Funds</button>
@@ -160,7 +164,7 @@ const Banking = () => {
         <h4>History</h4>
         <div>
           {bankingItems.map((item) => (
-            <div>
+            <div key={item.id}>
               <h3>{item.date}</h3>
               {item.deposit ? <p className="transaction__deposit">${item.amount}</p> : <p className="transaction__withdrawal">${item.amount}</p>}
             </div>
