@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { fire, db } from "../../util/firebase";
-import { v4 as uuidv4 } from "uuid";
 
 const Banking = () => {
   const [balance, setBalance] = useState();
@@ -10,10 +9,8 @@ const Banking = () => {
   const [loading, setLoading] = useState(false);
 
   const ref = db.collection("userbalance");
-  
 
   function getUserBalance() {
-      const test = 0; 
     setLoading(true);
     const userBalance = ref
       .where("id", "==", fire.auth().currentUser.uid)
@@ -23,7 +20,7 @@ const Banking = () => {
           const data = doc.data();
           const balanceNumber = data.balance;
           setBalance(balanceNumber);
-          console.log(balanceNumber)
+          console.log(balanceNumber);
         });
         setLoading(false);
       });
@@ -45,23 +42,73 @@ const Banking = () => {
     getUserBalance();
   }, []);
 
-  function addBalance(updateBalance) {
-   ref.doc(updateBalance.id).set(updateBalance).catch((err) => {
-       console.log(err)
-   })
+  //   function updateBalance(balanceData) {
+  //     ref
+  //       .doc(updateBalance.id)
+  //       .set({
+  //           balance: balanceData.balance,
+  //           id: balanceData.id
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+
+  //   const addBalanceHandler = (event) => {
+  //     event.preventDefault();
+
+  //     const additionalBalance = balance
+  //       ? parseInt(balance) + parseInt(deposit)
+  //       : parseInt(deposit);
+  //     updateBalance({
+  //       balance: additionalBalance,
+  //       id: fire.auth().currentUser.uid,
+  //     });
+  //     setBalance(additionalBalance);
+  //   };
+
+  //   const withdrawBalanceHandler = (event) => {
+  //     event.preventDefault();
+  //     const removeBalance = parseInt(balance) - parseInt(withdraw);
+  //     updateBalance({
+  //       balance: removeBalance,
+  //       id: fire.auth().currentUser.uid,
+  //     });
+  //     setBalance(removeBalance);
+  //   };
+
+  function changeBalance(updateBalance) {
+    ref
+      .doc(updateBalance.id)
+      .set(updateBalance)
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const addBalanceHandler = (event) => {
     event.preventDefault();
 
-    
-    const additionalBalance = balance ? (parseInt(balance) + parseInt(deposit)) : (parseInt(deposit));
-    addBalance({
+    const additionalBalance = balance
+      ? parseInt(balance) + parseInt(deposit)
+      : parseInt(deposit);
+    changeBalance({
       balance: additionalBalance,
-      id: fire.auth().currentUser.uid
-    })
+      id: fire.auth().currentUser.uid,
+    });
     setBalance(additionalBalance);
   };
+
+  const withdrawBalanceHandler = (event) => {
+      event.preventDefault();
+
+      const newBalance = parseInt(balance) - parseInt(withdraw);
+      changeBalance({
+          balance: newBalance,
+          id: fire.auth().currentUser.uid
+      })
+      setBalance(newBalance);
+  }
 
   return (
     <React.Fragment>
@@ -84,8 +131,13 @@ const Banking = () => {
       </div>
       <div>
         <h3>Withdraw Funds</h3>
-        <form>
-          <input type="number" />
+        <form onSubmit={withdrawBalanceHandler}>
+          <input
+            type="number"
+            value={withdraw}
+            max={balance}
+            onChange={(e) => setWithdraw(e.target.value)}
+          />
           <label>Amount</label>
           <button type="submit">Withdraw Funds</button>
         </form>
