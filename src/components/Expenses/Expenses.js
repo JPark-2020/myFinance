@@ -87,7 +87,7 @@ const Expenses = () => {
           required
         />
         <label htmlFor="categories">Category</label>
-        <select id="categories" onChange={(e) => setCategory(e.target.value)}>
+        <select id="categories" onChange={(e) => setCategory(e.target.value)} required>
           <option value="entertainment">Entertainment</option>
           <option value="rent">Rent</option>
           <option value="investments">Investments</option>
