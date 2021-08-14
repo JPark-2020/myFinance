@@ -8,7 +8,7 @@ const Expenses = () => {
   const [expenseName, setExpenseName] = useState("");
   const [expenseCost, setExpenseCost] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
-
+  const [category, setCategory] = useState();
   const ref = db.collection("expenses");
 
   function getExpenses() {
@@ -48,6 +48,7 @@ const Expenses = () => {
       name: expenseName,
       cost: expenseCost,
       date: expenseDate,
+      category: category, 
       id: uuidv4(),
       author: fire.auth().currentUser.uid,
     });
@@ -63,21 +64,36 @@ const Expenses = () => {
       <h1>Expenses</h1>
       <div>
         <h3>Add New Expense</h3>
+        <label>Expense Name</label>
         <input
           type="text"
           value={expenseName}
           onChange={(e) => setExpenseName(e.target.value)}
         />
+        <label>Expense Amount</label>
         <input
           type="number"
           value={expenseCost}
           onChange={(e) => setExpenseCost(e.target.value)}
         />
+        <label>Date Incurred</label>
         <input
           type="date"
           value={expenseDate}
           onChange={(e) => setExpenseDate(e.target.value)}
         />
+        <label htmlFor="categories">Category</label>
+        <select id="categories" onChange={(e) => setCategory(e.target.value)}>
+          <option value="entertainment">Entertainment</option>
+          <option value="rent">Rent</option>
+          <option value="investments">Investments</option>
+          <option value="food">Food</option>
+          <option value="insurance">Insurance</option>
+          <option value="health">Health</option>
+          <option value="misc">Misc.</option>
+        </select>
+
+        
         <button onClick={expenseSubmitHandler}>Add Expense</button>
       </div>
       <hr />
