@@ -13,7 +13,7 @@ const Expenses = () => {
 
   function getExpenses() {
     setLoading(true);
-    ref.onSnapshot((querySnapshot) => {
+    ref.orderBy("date", "desc").onSnapshot((querySnapshot) => {
       const expenseItems = [];
       querySnapshot.forEach((doc) => {
         expenseItems.push(doc.data());
@@ -51,6 +51,9 @@ const Expenses = () => {
       id: uuidv4(),
       author: fire.auth().currentUser.uid,
     });
+    setExpenseName('');
+    setExpenseCost('');
+    setExpenseDate('');
   };
 
 
