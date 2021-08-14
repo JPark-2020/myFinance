@@ -31,24 +31,26 @@ const Banking = () => {
 
   function getBankingHistory() {
     setLoading(true);
-    ref2.where("user", "==", fire.auth().currentUser.uid).orderBy("date", "desc").onSnapshot((querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push(doc.data());
+    ref2
+      .where("user", "==", fire.auth().currentUser.uid)
+      .orderBy("date", "desc")
+      .onSnapshot((querySnapshot) => {
+        const items = [];
+        querySnapshot.forEach((doc) => {
+          items.push(doc.data());
+        });
+        setBankingItems(items);
+        setLoading(false);
       });
-      setBankingItems(items);
-      setLoading(false);
-    });
   }
 
   useEffect(() => {
     getUserBalance();
-    
   }, []);
 
-    useEffect(() => {
-        getBankingHistory();
-    }, [bankingItems])
+  useEffect(() => {
+    getBankingHistory();
+  }, [bankingItems]);
 
   function changeBalance(updateBalance) {
     ref
@@ -88,6 +90,8 @@ const Banking = () => {
       id: fire.auth().currentUser.uid,
     });
     setBalance(additionalBalance);
+    setDeposit('');
+    setDate('');
   };
 
   const withdrawBalanceHandler = (event) => {
@@ -166,7 +170,11 @@ const Banking = () => {
           {bankingItems.map((item) => (
             <div key={item.id}>
               <h3>{item.date}</h3>
-              {item.deposit ? <p className="transaction__deposit">${item.amount}</p> : <p className="transaction__withdrawal">${item.amount}</p>}
+              {item.deposit ? (
+                <p className="transaction__deposit">${item.amount}</p>
+              ) : (
+                <p className="transaction__withdrawal">${item.amount}</p>
+              )}
             </div>
           ))}
         </div>
