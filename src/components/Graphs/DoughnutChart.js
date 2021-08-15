@@ -3,10 +3,17 @@ import { Doughnut } from "react-chartjs-2";
 import { fire, db } from "../../util/firebase";
 
 // Chart shows breakdown of monthly expenses
-// Chart only seems to show one expense until you press sidenav - need to resolve 
+// Chart only seems to show one expense until you press sidenav - need to resolve
 
 const DoughnutChart = () => {
   const [expenseCategories, setExpenseCategories] = useState([]);
+  const [entertainment, setEntertainment] = useState(0);
+  const [rent, setRent] = useState(0);
+  const [food, setFood] = useState(0);
+  const [misc, setMisc] = useState(0);
+  const [investments, setInvestments] = useState(0);
+  const [insurance, setInsurance] = useState(0);
+  const [health, setHealth] = useState();
 
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -39,48 +46,68 @@ const DoughnutChart = () => {
 
   const ref = db.collection("expenses");
 
-  function getCategoriesData() {
+  function getCategoriesData(category) {
     const items = [];
 
     const categoryQuery = ref
       .where("author", "==", fire.auth().currentUser.uid)
       .where("date", ">=", todayConvert)
-      .where("date", "<=", lastDayConvert);
+      .where("date", "<=", lastDayConvert)
+      .where("category", "==", category);
 
     categoryQuery.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const categoryInfo = {
-          date: data.date,
-          cost: data.cost,
-          category: data.category,
-        };
-        items.push(categoryInfo);
-        setExpenseCategories(items);
+        const catItem = data.cost;
+        items.push(catItem);
+
+        const cost = items.reduce((a, b) => a + b, 0);
+
+        if (category === "entertainment") {
+          setEntertainment(cost);
+        } else if (category === "rent") {
+          setRent(cost);
+        } else if (category === "food") {
+          setFood(cost);
+        } else if (category === "misc") {
+          setMisc(cost);
+        } else if (category === "investments") {
+          setInvestments(cost);
+        } else if (category === "insurance") {
+          setInsurance(cost);
+        } else if (category === "health") {
+          setHealth(cost);
+        }
       });
     });
   }
 
-  function filterCategory(category) {
-    let cost = 0;
-    for (let i = 0; i < expenseCategories.length; i++) {
-      if (expenseCategories[i].category == category) {
-        cost += expenseCategories[i].cost;
-        return cost;
-      }
+  function assignCatData(category) {
+    if (category === "entertainment") {
+      return entertainment;
+    } else if (category === "rent") {
+      return rent;
+    } else if (category === "food") {
+      return food;
+    } else if (category === "misc") {
+      return misc;
+    } else if (category === "investments") {
+      return investments;
+    } else if (category === "insurance") {
+      return insurance;
+    } else if (category === "health") {
+      return health;
     }
   }
 
-  const entertainment = filterCategory("entertainment");
-  const rent = filterCategory("rent");
-  const food = filterCategory("food");
-  const misc = filterCategory("misc");
-  const investments = filterCategory("investments");
-  const insurance = filterCategory("insurance");
-  const health = filterCategory("health");
-  
   useEffect(() => {
-    getCategoriesData();
+    getCategoriesData('entertainment');
+    getCategoriesData('rent');
+    getCategoriesData('food');
+    getCategoriesData('misc');
+    getCategoriesData('investments');
+    getCategoriesData('insurance');
+    getCategoriesData('health');
   }, []);
 
   return (
@@ -101,13 +128,13 @@ const DoughnutChart = () => {
             {
               label: "Expense Breakdown",
               data: [
-                entertainment,
-                rent,
-                food,
-                misc,
-                investments,
-                insurance,
-                health,
+                assignCatData("entertainment"),
+                assignCatData("rent"),
+                assignCatData("food"),
+                assignCatData("misc"),
+                assignCatData("investments"),
+                assignCatData("insurance"),
+                assignCatData("health"),
               ],
               backgroundColor: [
                 "rgb(255, 99, 132)",
