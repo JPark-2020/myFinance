@@ -54,7 +54,7 @@ const Banking = () => {
 
   useEffect(() => {
     getBankingHistory();
-  }, [bankingItems]);
+  }, []);
 
   function changeBalance(updateBalance) {
     ref
@@ -166,7 +166,7 @@ const Banking = () => {
             type="checkbox"
             value={depositSavings}
             checked={depositSavings}
-            onClick={depositSavingsHandler}
+            onChange={depositSavingsHandler}
             htmlFor='depositSavings'
           />
           <label id='depositSavings'>Savings?</label>
@@ -196,7 +196,7 @@ const Banking = () => {
             value={withdrawSavings}
             checked={withdrawSavings}
             htmlFor='withdrawSavings'
-            onClick={withdrawSavingsHandler}
+            onChange={withdrawSavingsHandler}
           />
           <label id='withdrawSavings'>Savings?</label>
           <button type="submit">Withdraw Funds</button>

@@ -79,6 +79,7 @@ const Expenses = () => {
           type="number"
           value={expenseCost}
           onChange={(e) => setExpenseCost(e.target.value)}
+          min='0'
           required
         />
         <label>Date Incurred</label>

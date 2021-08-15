@@ -5,13 +5,20 @@ import { fire, db } from "../../util/firebase";
 const BarChart = () => {
   const [depositsInfo, setDepositsInfo] = useState([]);
   const [withdrawalsInfo, setWithdrawalsInfo] = useState([]);
+  const [day1, setDay1] = useState();
+  const [day2, setDay2] = useState();
+  const [day3, setDay3] = useState();
+  const [day4, setDay4] = useState();
+  const [day5, setDay5] = useState();
+  const [day6, setDay6] = useState();
+  const [day7, setDay7] = useState();
   const ref = db.collection("transactions");
 
   function dateChange(day) {
     let curr = new Date();
     let week = [];
 
-    for (let i = 0; i <= 7; i++) {
+    for (let i = 0; i <= 6; i++) {
       let first = curr.getDate() - curr.getDay() + i;
       let day = new Date(curr.setDate(first)).toISOString().slice(0, 10);
       week.push(day);
@@ -19,20 +26,38 @@ const BarChart = () => {
     return week[day];
   }
 
-  function getDeposits() {
+  function getDeposits(day) {
     const depositQuery = ref
       .where("user", "==", fire.auth().currentUser.uid)
-      .where("deposit", "==", true);
+      .where("deposit", "==", true)
+      .where("date", "==", day);
+
     const items = [];
     depositQuery.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const depositInfo = {
-          date: data.date,
-          amount: data.amount,
-        };
+        console.log(data)
+        const depositInfo = data.amount;
         items.push(depositInfo);
-        setDepositsInfo(items);
+
+        console.log(items)
+        const dayTotal = items.reduce((a, b) => a + b, 0);
+        console.log(dayTotal);
+        if (day === dateChange(0)) {
+          setDay1(dayTotal);
+        } else if (day === dateChange(1)) {
+          setDay2(dayTotal);
+        } else if (day === dateChange(2)) {
+          setDay3(dayTotal);
+        } else if (day === dateChange(3)) {
+          setDay4(dayTotal);
+        } else if (day === dateChange(4)) {
+          setDay5(dayTotal);
+        } else if (day === dateChange(5)) {
+          setDay6(dayTotal);
+        } else if (day === dateChange(6)) {
+          setDay7(dayTotal);
+        }
       });
     });
   }
@@ -54,31 +79,44 @@ const BarChart = () => {
       });
     });
   }
-
+  // getWithdrawals();
   useEffect(() => {
-    getDeposits();
-    getWithdrawals();
+    getDeposits(dateChange(0));
+    getDeposits(dateChange(1));
+    getDeposits(dateChange(2));
+    getDeposits(dateChange(3));
+    getDeposits(dateChange(4));
+    getDeposits(dateChange(5));
+    getDeposits(dateChange(6));
   }, []);
 
   function assignWithdrawals(day) {
     let amount = 0;
     for (let i = 0; i < withdrawalsInfo.length; i++) {
       if (withdrawalsInfo[i].date == day) {
-        amount = parseInt(amount) + parseInt(withdrawalsInfo[i].amount);
-        return amount;
+        amount = amount + withdrawalsInfo[i].amount;
       }
     }
   }
 
   function assignDeposits(day) {
-    let amount = 0;
-    for (let i = 0; i < depositsInfo.length; i++) {
-      if (depositsInfo[i].date == day) {
-        amount = parseInt(amount) + parseInt(depositsInfo[i].amount);
-        return amount;
-      }
+    if(day === 0){
+      return day1
+    } else if (day === 1 ){
+      return  day2
+    } else if (day === 2 ){
+      return day3
+    } else if (day === 3){
+      return day4
+    } else if(day === 4){
+      return day5
+    } else if (day === 5){
+      return day6
+    } else if (day === 6){
+      return day7
     }
   }
+
 
   return (
     <div className="barChart">
@@ -98,13 +136,13 @@ const BarChart = () => {
             {
               label: "Deposit",
               data: [
-                assignDeposits(dateChange(0)),
-                assignDeposits(dateChange(1)),
-                assignDeposits(dateChange(2)),
-                assignDeposits(dateChange(3)),
-                assignDeposits(dateChange(4)),
-                assignDeposits(dateChange(5)),
-                assignDeposits(dateChange(6)),
+                assignDeposits(0),
+                assignDeposits(1),
+                assignDeposits(2),
+                assignDeposits(3),
+                assignDeposits(4),
+                assignDeposits(5),
+                assignDeposits(6)
               ],
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
@@ -142,6 +180,9 @@ const BarChart = () => {
             },
           ],
         }}
+        width={400}
+        height={400}
+        options={{ maintainAspectRatio: true }}
       />
     </div>
   );

@@ -23,6 +23,7 @@ const Sidebar = (props) => {
           <Link to="#" className="menu-bars">
             <FaBars onClick={showSidebar} />
           </Link>
+          <h4 className="navbar__heading">myFinance</h4>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>

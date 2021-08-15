@@ -71,3 +71,8 @@
     margin-left: 16px; 
 }
 
+.navbar__heading {
+    margin: auto; 
+    color: white;
+    font-size: 30px; 
+}

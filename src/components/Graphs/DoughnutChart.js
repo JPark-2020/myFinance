@@ -58,7 +58,6 @@ const DoughnutChart = () => {
         items.push(categoryInfo);
         setExpenseCategories(items);
       });
-      console.log(items);
     });
   }
 
@@ -79,7 +78,7 @@ const DoughnutChart = () => {
   const investments = filterCategory("investments");
   const insurance = filterCategory("insurance");
   const health = filterCategory("health");
-
+  
   useEffect(() => {
     getCategoriesData();
   }, []);
