@@ -3,15 +3,17 @@ import { fire, db } from "../../util/firebase";
 import { v4 as uuidv4 } from "uuid";
 
 // Note if savings is ticked it returns false -> queries have been adjusted to reflect this
+    // If document's savings property returns false that means it is a savings***
 
 const Banking = () => {
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState(0);
   const [bankingItems, setBankingItems] = useState([]);
   const [withdraw, setWithdraw] = useState();
   const [deposit, setDeposit] = useState();
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState();
-  const [savings, setSavings] = useState(false);
+  const [withdrawSavings, setWithdrawSavings] = useState(false);
+  const [depositSavings, setDepositSavings] = useState(false);
   const ref = db.collection("userbalance");
   const ref2 = db.collection("transactions");
 
@@ -74,15 +76,16 @@ const Banking = () => {
 
   const addBalanceHandler = (event) => {
     event.preventDefault();
+    const numDeposit = parseInt(deposit)
 
     const additionalBalance = balance
       ? parseInt(balance) + parseInt(deposit)
       : parseInt(deposit);
 // issue with checkbox
-      let oppositeSavings = !savings; 
+      let oppositeSavings = !depositSavings; 
     
       addTransactions({
-      amount: deposit,
+      amount: numDeposit,
       deposit: true,
       date: date,
       id: uuidv4(),
@@ -102,13 +105,17 @@ const Banking = () => {
   const withdrawBalanceHandler = (event) => {
     event.preventDefault();
 
+    const numWithdraw = parseInt(withdraw);
+
     const newBalance = parseInt(balance) - parseInt(withdraw);
 
+    let oppositeSavings = !withdrawSavings;
     addTransactions({
-      amount: withdraw,
+      amount: numWithdraw,
       deposit: false,
       date: date,
       id: uuidv4(),
+      savings: oppositeSavings,
       user: fire.auth().currentUser.uid,
     });
 
@@ -119,11 +126,17 @@ const Banking = () => {
     setBalance(newBalance);
   };
 
-  const savingsHandler = event => {
+  const withdrawSavingsHandler = event => {
       event.preventDefault();
-      setSavings(!savings);
-      console.log(savings);
+      setWithdrawSavings(!withdrawSavings);
+      console.log(withdrawSavings);
   }
+
+  const depositSavingsHandler = event => {
+    event.preventDefault();
+    setDepositSavings(!depositSavings);
+    console.log(depositSavings);
+}
 
   return (
     <React.Fragment>
@@ -151,11 +164,12 @@ const Banking = () => {
           <label>Date</label>
           <input
             type="checkbox"
-            value={savings}
-            checked={savings}
-            onClick={savingsHandler}
+            value={depositSavings}
+            checked={depositSavings}
+            onClick={depositSavingsHandler}
+            htmlFor='depositSavings'
           />
-          <label>Savings?</label>
+          <label id='depositSavings'>Savings?</label>
           <button type="submit">Deposit Funds</button>
         </form>
       </div>
@@ -177,6 +191,14 @@ const Banking = () => {
             required
           />
           <label>Date</label>
+          <input
+            type="checkbox"
+            value={withdrawSavings}
+            checked={withdrawSavings}
+            htmlFor='withdrawSavings'
+            onClick={withdrawSavingsHandler}
+          />
+          <label id='withdrawSavings'>Savings?</label>
           <button type="submit">Withdraw Funds</button>
         </form>
       </div>

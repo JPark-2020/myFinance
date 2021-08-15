@@ -61,14 +61,6 @@ const DoughnutChart = () => {
       })
   }
 
-  // const entertainmentCost = 0;
-  // const rentCost = 0;
-  // const foodCost = 0;
-  // const miscCost = 0;
-  // const investmentCost =0;
-  // const insuranceCost = 0;
-  // const healthCost = 0;
-
 
   function filterCategory(category){
     let cost = 0;
