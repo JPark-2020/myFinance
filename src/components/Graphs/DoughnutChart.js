@@ -37,7 +37,6 @@ const DoughnutChart = () => {
 
   const ref = db.collection("expenses");
 
-
   function getCategoriesData() {
     const items = [];
 
@@ -46,32 +45,37 @@ const DoughnutChart = () => {
       .where("date", ">=", todayConvert)
       .where("date", "<=", lastDayConvert);
 
-      categoryQuery.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const categoryInfo = {
-            date: data.date,
-            cost: data.cost,
-            category: data.category
-          }
-          items.push(categoryInfo);
-          setExpenseCategories(items);
-        })
-        console.log(items)
-      })
+    categoryQuery.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const categoryInfo = {
+          date: data.date,
+          cost: data.cost,
+          category: data.category,
+        };
+        items.push(categoryInfo);
+        setExpenseCategories(items);
+      });
+      console.log(items);
+    });
   }
 
-
-  function filterCategory(category){
+  function filterCategory(category) {
     let cost = 0;
-    for(let i =0; i <expenseCategories.length; i++){
-      if (expenseCategories[i].category == category){
-          cost += expenseCategories[i].cost
-          return cost
-        }
+    for (let i = 0; i < expenseCategories.length; i++) {
+      if (expenseCategories[i].category == category) {
+        cost += expenseCategories[i].cost;
+        return cost;
       }
+    }
   }
-
+  const entertainment = filterCategory('entertainment')
+  const rent = filterCategory('rent')
+  const food = filterCategory('food')
+  const misc = filterCategory('misc')
+  const investments = filterCategory('investments')
+  const insurance = filterCategory('insurance')
+  const health = filterCategory('health')
 
 
   useEffect(() => {
@@ -83,11 +87,19 @@ const DoughnutChart = () => {
       <h4>Current Month's Expense Breakdown</h4>
       <Doughnut
         data={{
-          labels: ["Entertainment", "Rent", "Food", "Misc.", "Investment", "Insurance", "Health"],
+          labels: [
+            "Entertainment",
+            "Rent",
+            "Food",
+            "Misc",
+            "Investment",
+            "Insurance",
+            "Health",
+          ],
           datasets: [
             {
               label: "Expense Breakdown",
-              data: [filterCategory('entertainment'),filterCategory('rent'),filterCategory('food'),filterCategory('misc'),filterCategory('investments'),filterCategory('insurance'),filterCategory('health')],
+             data: [entertainment, rent, food, misc, investments, insurance, health],
               backgroundColor: [
                 "rgb(255, 99, 132)",
                 "rgb(54, 110, 235)",
@@ -95,7 +107,7 @@ const DoughnutChart = () => {
                 "rgb(85, 155, 86)",
                 "rgb(255, 5, 86)",
                 "rgb(250, 205, 86)",
-                "rgb(195, 205, 86)"
+                "rgb(195, 205, 86)",
               ],
               hoverOffset: 4,
             },

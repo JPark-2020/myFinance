@@ -82,7 +82,7 @@ const BarChart = () => {
 
   return (
     <div className="barChart">
-      <h4>Weekly Deposits/Withdrawals</h4>
+      <h4>Current Week's Deposits/Withdrawals</h4>
       <Bar
         data={{
           labels: [
