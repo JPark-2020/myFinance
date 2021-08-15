@@ -60,8 +60,10 @@ const BankBalance = () => {
   return (
     <div>
       <h3>BANK ACCOUNTS</h3>
+      <br/>
       <div>
         <h4>Bank Account 1</h4>
+        <hr />
         <p>
           Checkings: <span>${userBalance}</span>
         </p>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { fire, db } from "../../util/firebase";
-// This Chart will show monthly expenses and Total Money
+
+// Chart shows breakdown of monthly expenses
+// Chart only seems to show one expense until you press sidenav - need to resolve 
 
 const DoughnutChart = () => {
   const [expenseCategories, setExpenseCategories] = useState([]);
@@ -69,14 +71,14 @@ const DoughnutChart = () => {
       }
     }
   }
-  const entertainment = filterCategory('entertainment')
-  const rent = filterCategory('rent')
-  const food = filterCategory('food')
-  const misc = filterCategory('misc')
-  const investments = filterCategory('investments')
-  const insurance = filterCategory('insurance')
-  const health = filterCategory('health')
 
+  const entertainment = filterCategory("entertainment");
+  const rent = filterCategory("rent");
+  const food = filterCategory("food");
+  const misc = filterCategory("misc");
+  const investments = filterCategory("investments");
+  const insurance = filterCategory("insurance");
+  const health = filterCategory("health");
 
   useEffect(() => {
     getCategoriesData();
@@ -99,7 +101,15 @@ const DoughnutChart = () => {
           datasets: [
             {
               label: "Expense Breakdown",
-             data: [entertainment, rent, food, misc, investments, insurance, health],
+              data: [
+                entertainment,
+                rent,
+                food,
+                misc,
+                investments,
+                insurance,
+                health,
+              ],
               backgroundColor: [
                 "rgb(255, 99, 132)",
                 "rgb(54, 110, 235)",
