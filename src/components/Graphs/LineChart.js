@@ -140,7 +140,7 @@ const LineChart = () => {
 
   return (
     <div>
-      <h4>Monthly Expenses</h4>
+      <h4 className='chart__header'>Monthly Expenses</h4>
       <Line
         data={{
           labels: [
@@ -159,7 +159,7 @@ const LineChart = () => {
           ],
           datasets: [
             {
-              label: "My First Dataset",
+              label: "2021",
               data: [
                 assignMonthExpenses("jan"),
                 assignMonthExpenses("feb"),
@@ -180,6 +180,9 @@ const LineChart = () => {
             },
           ],
         }}
+        width={400}
+        height={400}
+        options={{ maintainAspectRatio: true }}
       />
     </div>
   );

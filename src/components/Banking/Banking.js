@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { fire, db } from "../../util/firebase";
 import { v4 as uuidv4 } from "uuid";
 
+import "./Banking.css";
 // Note if savings is ticked it returns false -> queries have been adjusted to reflect this
-    // If document's savings property returns false that means it is a savings***
+// If document's savings property returns false that means it is a savings***
 
 const Banking = () => {
   const [balance, setBalance] = useState(0);
@@ -76,15 +77,15 @@ const Banking = () => {
 
   const addBalanceHandler = (event) => {
     event.preventDefault();
-    const numDeposit = parseInt(deposit)
+    const numDeposit = parseInt(deposit);
 
     const additionalBalance = balance
       ? parseInt(balance) + parseInt(deposit)
       : parseInt(deposit);
-// issue with checkbox
-      let oppositeSavings = !depositSavings; 
-    
-      addTransactions({
+    // issue with checkbox
+    let oppositeSavings = !depositSavings;
+
+    addTransactions({
       amount: numDeposit,
       deposit: true,
       date: date,
@@ -126,97 +127,108 @@ const Banking = () => {
     setBalance(newBalance);
   };
 
-  const withdrawSavingsHandler = event => {
-      event.preventDefault();
-      setWithdrawSavings(!withdrawSavings);
-      console.log(withdrawSavings);
-  }
+  const withdrawSavingsHandler = (event) => {
+    event.preventDefault();
+    setWithdrawSavings(!withdrawSavings);
+    console.log(withdrawSavings);
+  };
 
-  const depositSavingsHandler = event => {
+  const depositSavingsHandler = (event) => {
     event.preventDefault();
     setDepositSavings(!depositSavings);
     console.log(depositSavings);
-}
+  };
 
   return (
     <React.Fragment>
-      <div>
+      <div className="banking__header">
         <h3>Banking</h3>
         <h4>Current Balance: {balance}</h4>
       </div>
 
-      <div>
-        <h3>Deposit Funds</h3>
-        <form onSubmit={addBalanceHandler}>
-          <input
-            type="number"
-            value={deposit}
-            onChange={(e) => setDeposit(e.target.value)}
-            required
-          />
-          <label>Amount</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-          <label>Date</label>
-          <input
-            type="checkbox"
-            value={depositSavings}
-            checked={depositSavings}
-            onChange={depositSavingsHandler}
-            htmlFor='depositSavings'
-          />
-          <label id='depositSavings'>Savings?</label>
-          <button type="submit">Deposit Funds</button>
-        </form>
-      </div>
-      <div>
-        <h3>Withdraw Funds</h3>
-        <form onSubmit={withdrawBalanceHandler}>
-          <input
-            type="number"
-            value={withdraw}
-            max={balance}
-            onChange={(e) => setWithdraw(e.target.value)}
-            required
-          />
-          <label>Amount</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-          <label>Date</label>
-          <input
-            type="checkbox"
-            value={withdrawSavings}
-            checked={withdrawSavings}
-            htmlFor='withdrawSavings'
-            onChange={withdrawSavingsHandler}
-          />
-          <label id='withdrawSavings'>Savings?</label>
-          <button type="submit">Withdraw Funds</button>
-        </form>
-      </div>
-      <hr />
-      <br />
-      <div>
-        <h4>History</h4>
-        <div>
-          {bankingItems.map((item) => (
-            <div key={item.id}>
-              <h3>{item.date}</h3>
-              {item.deposit ? (
-                <p className="transaction__deposit">${item.amount}</p>
-              ) : (
-                <p className="transaction__withdrawal">${item.amount}</p>
-              )}
-            </div>
-          ))}
+      <div className="banking__body">
+        <div className="banking__forms">
+          <div className="banking__deposit__container">
+            <h3 className="bankform__header">Deposit Funds</h3>
+            <form
+              className="banking__deposit__form"
+              onSubmit={addBalanceHandler}
+            >
+              <label>Amount</label>
+              <input
+                type="number"
+                value={deposit}
+                onChange={(e) => setDeposit(e.target.value)}
+                required
+              />
+              <label>Date</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+              <label id="depositSavings">Savings?</label>
+              <input
+                type="checkbox"
+                className="savingsButton"
+                value={depositSavings}
+                checked={depositSavings}
+                onChange={depositSavingsHandler}
+                htmlFor="depositSavings"
+              />
+              <button type="submit">Deposit Funds</button>
+            </form>
+          </div>
+          <div className="banking__withdraw__container">
+            <h3 className="bankform__header">Withdraw Funds</h3>
+            <form
+              className="banking__withdraw__form"
+              onSubmit={withdrawBalanceHandler}
+            >
+              <label>Amount</label>
+              <input
+                type="number"
+                value={withdraw}
+                max={balance}
+                onChange={(e) => setWithdraw(e.target.value)}
+                required
+              />
+              <label>Date</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+              <label id="withdrawSavings">Savings?</label>
+              <input
+              className="savingsButton"
+                type="checkbox"
+                value={withdrawSavings}
+                checked={withdrawSavings}
+                htmlFor="withdrawSavings"
+                onChange={withdrawSavingsHandler}
+              />
+
+              <button type="submit">Withdraw Funds</button>
+            </form>
+          </div>
+        </div>
+
+        <div className="banking__history">
+          <div className="banking__history__list">
+            {bankingItems.map((item) => (
+              <div className="banking__item" key={item.id}>
+                <h3>{item.date}:</h3>
+                {item.deposit ? (
+                  <p className="transaction__deposit">+${item.amount}</p>
+                ) : (
+                  <p className="transaction__withdrawal">-${item.amount}</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </React.Fragment>

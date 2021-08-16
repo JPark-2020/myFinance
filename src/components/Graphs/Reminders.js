@@ -55,7 +55,7 @@ const Reminders = () => {
 
   return (
     <div>
-      <h3>Reminders</h3>
+      <h4 className="chart__header">Reminders</h4>
       <div>
         <form onSubmit={reminderSubmitHandler}>
           <input
@@ -63,18 +63,22 @@ const Reminders = () => {
             value={note}
             placeholder="write a note..."
             onChange={(e) => setNote(e.target.value)}
+            className="reminderInput"
           />
-          <button type="submit">+</button>
+          <button className="reminderSubmit" type="submit">
+            +
+          </button>
         </form>
       </div>
       {reminders.map((reminder) => {
         return (
-          <div key={reminder.id}>
-            <div>
-              <p>{reminder.notes}</p>
-            </div>
-            <div>
-              <button onClick={() => deleteReminder(reminder)}>X</button>
+          <div className="reminder__item" key={reminder.id}>
+            
+            <div className="reminder__content__container">
+              <p className="reminder__content">{reminder.notes}</p>
+              <button className="reminder__submit"
+                onClick={() => deleteReminder(reminder)}
+              >X</button>
             </div>
           </div>
         );

@@ -14,7 +14,7 @@
 .dashboard__chart {
     box-shadow: 0 50px 70px -20px rgba(0,0,0,0.8);
     width: 28vw;
-    height: 500px; 
+    height: 550px; 
     min-width: 500px; 
     padding: 30px; 
     border: 2px solid black; 
@@ -30,3 +30,63 @@
     position: absolute; 
 }
 
+.chart__header {
+    padding: 20px; 
+    text-align: center; 
+}
+
+/* debthelp */
+.debt__header, .debt__content{
+    margin-bottom: 20px; 
+}
+
+
+
+.debt__link {
+    text-decoration: none; 
+}
+
+/* reminder */
+
+.reminderInput{
+    border: 2px solid black;
+    padding: 15px; 
+    width: 400px; 
+}
+
+.reminderSubmit{
+    border: 2px solid black; 
+    padding: 15px; 
+    color: white;
+    background-color: black;
+}
+
+.reminder__item {
+    margin-top: 20px; 
+    color: white; 
+    display: flex; 
+    flex-direction: row; 
+    align-items:center;
+    justify-content: center; 
+}
+
+.reminder__content__container {
+    color: white; 
+    width: 100%; 
+    padding: 10px; 
+    display: flex; 
+    align-items:baseline;
+}
+
+.reminder__content{
+    width: 100%;
+    background-color: black;
+    padding: 10px; 
+}
+.reminder__submit {
+    display: inline-block; 
+    border: none; 
+    margin-left: auto; 
+    padding: 10px; 
+    color: gray; 
+}

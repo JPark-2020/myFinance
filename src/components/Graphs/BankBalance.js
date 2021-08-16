@@ -59,7 +59,7 @@ const BankBalance = () => {
 
   return (
     <div>
-      <h3>BANK ACCOUNTS</h3>
+      <h4 className="chart__header">BANK ACCOUNTS</h4>
       <br/>
       <div>
         <h4>Bank Account 1</h4>

@@ -1,6 +1,8 @@
- import { db, fire } from "../../util/firebase";
+import { db, fire } from "../../util/firebase";
 import React, { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
+
+import "./Expenses.css";
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
@@ -8,20 +10,23 @@ const Expenses = () => {
   const [expenseName, setExpenseName] = useState("");
   const [expenseCost, setExpenseCost] = useState("");
   const [expenseDate, setExpenseDate] = useState("");
-  const [expenseCategory, setExpenseCategory] = useState('');
+  const [expenseCategory, setExpenseCategory] = useState("");
 
   const ref = db.collection("expenses");
 
   function getExpenses() {
     setLoading(true);
-    ref.where("author", "==", fire.auth().currentUser.uid).orderBy("date", "desc").onSnapshot((querySnapshot) => {
-      const expenseItems = [];
-      querySnapshot.forEach((doc) => {
-        expenseItems.push(doc.data());
+    ref
+      .where("author", "==", fire.auth().currentUser.uid)
+      .orderBy("date", "desc")
+      .onSnapshot((querySnapshot) => {
+        const expenseItems = [];
+        querySnapshot.forEach((doc) => {
+          expenseItems.push(doc.data());
+        });
+        setExpenses(expenseItems);
+        setLoading(false);
       });
-      setExpenses(expenseItems);
-      setLoading(false);
-    });
   }
 
   useEffect(() => {
@@ -29,9 +34,12 @@ const Expenses = () => {
   }, []);
 
   function addExpense(newExpense) {
-    ref.doc(newExpense.id).set(newExpense).catch((err) => {
-      console.log(err);
-    });
+    ref
+      .doc(newExpense.id)
+      .set(newExpense)
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function deleteExpense(expense) {
@@ -51,22 +59,18 @@ const Expenses = () => {
       name: expenseName,
       cost: numCost,
       date: expenseDate,
-      category: expenseCategory, 
+      category: expenseCategory,
       id: uuidv4(),
       author: fire.auth().currentUser.uid,
     });
-    setExpenseName('');
-    setExpenseCost('');
-    setExpenseDate('');
+    setExpenseName("");
+    setExpenseCost("");
+    setExpenseDate("");
   };
 
-
-
   return (
-    <div>
-      <h1>Expenses</h1>
-      <div>
-        <h3>Add New Expense</h3>
+    <div className="expenses__main">
+      <div className="expenses__form">
         <label>Expense Name</label>
         <input
           type="text"
@@ -79,7 +83,7 @@ const Expenses = () => {
           type="number"
           value={expenseCost}
           onChange={(e) => setExpenseCost(e.target.value)}
-          min='0'
+          min="0"
           required
         />
         <label>Date Incurred</label>
@@ -90,35 +94,40 @@ const Expenses = () => {
           required
         />
         <label htmlFor="categories">Category</label>
-        <select id="categories" onChange={(e) => {
-          e.preventDefault();
-          setExpenseCategory(e.target.value)}} required>
-          <option value='entertainment'>Entertainment</option>
-          <option value='rent'>Rent</option>
-          <option value='investments'>Investments</option>
-          <option value='food' selected>Food</option>
-          <option value='insurance'>Insurance</option>
-          <option value='health'>Health</option>
-          <option value='misc'>Misc.</option>
+        <select
+          id="categories"
+          onChange={(e) => {
+            e.preventDefault();
+            setExpenseCategory(e.target.value);
+          }}
+          required
+        >
+          <option value="entertainment">Entertainment</option>
+          <option value="rent">Rent</option>
+          <option value="investments">Investments</option>
+          <option value="food" selected>
+            Food
+          </option>
+          <option value="insurance">Insurance</option>
+          <option value="health">Health</option>
+          <option value="misc">Misc.</option>
         </select>
 
-        
         <button onClick={expenseSubmitHandler}>Add Expense</button>
       </div>
-      <hr />
-      
-      {expenses.map((expense) => (
-        <div key={expense.id}>
-          <div>
-            <h3>{expense.name}</h3>
-            <p>${expense.cost}</p>
-            <p>{expense.date}</p>
+
+      <div className="expenses__items">
+        {expenses.map((expense) => (
+          <div className="expense__list__item" key={expense.id}>
+            <div className="expense__item__info">
+              <p className="expense__date">{expense.date}:</p>
+              <p className="expense__desc">{expense.name}</p>
+              <p className="expense__cost">${expense.cost}</p>
+              <p className="expense__remove" onClick={() => deleteExpense(expense)}>X</p>
+            </div>
           </div>
-          <div>
-            <button onClick={() => deleteExpense(expense)}>X</button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

@@ -112,7 +112,7 @@ const DoughnutChart = () => {
 
   return (
     <div className="doughnutChart">
-      <h4>Current Month's Expense Breakdown</h4>
+      <h4 className="chart__header">Current Month's Expense Breakdown</h4>
       <Doughnut
         data={{
           labels: [
@@ -148,7 +148,12 @@ const DoughnutChart = () => {
               hoverOffset: 4,
             },
           ],
+          
+        
         }}
+        width={400}
+        height={400}
+        options={{ maintainAspectRatio: true }}
       />
     </div>
   );
