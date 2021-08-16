@@ -101,6 +101,7 @@ const Banking = () => {
     setBalance(additionalBalance);
     setDeposit("");
     setDate("");
+    setWithdraw("");
   };
 
   const withdrawBalanceHandler = (event) => {
