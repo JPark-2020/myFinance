@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fire, db } from "../../util/firebase";
 import { v4 as uuidv4 } from "uuid";
-
+import ReactPaginate from "react-paginate";
 import "./Banking.css";
 // Note if savings is ticked it returns false -> queries have been adjusted to reflect this
 // If document's savings property returns false that means it is a savings***
@@ -17,7 +17,29 @@ const Banking = () => {
   const [depositSavings, setDepositSavings] = useState(false);
   const ref = db.collection("userbalance");
   const ref2 = db.collection("transactions");
+  const [pageNumber, setPageNumber] = useState(0);
+  const itemsPerPage = 10;
+  const pagesVisited = pageNumber * itemsPerPage;
+  const pageCount = Math.ceil(bankingItems.length / itemsPerPage);
 
+  const displayItems = bankingItems
+    .slice(pagesVisited, pagesVisited + itemsPerPage)
+    .map((item) => {
+      return (
+        <div className="banking__item" key={item.id}>
+          <h3>{item.date}:</h3>
+          {item.deposit ? (
+            <p className="transaction__deposit">+${item.amount}</p>
+          ) : (
+            <p className="transaction__withdrawal">-${item.amount}</p>
+          )}
+        </div>
+      );
+    });
+
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
   function getUserBalance() {
     setLoading(true);
     const userBalance = ref
@@ -204,7 +226,7 @@ const Banking = () => {
               />
               <label id="withdrawSavings">Savings?</label>
               <input
-              className="savingsButton"
+                className="savingsButton"
                 type="checkbox"
                 value={withdrawSavings}
                 checked={withdrawSavings}
@@ -219,16 +241,18 @@ const Banking = () => {
 
         <div className="banking__history">
           <div className="banking__history__list">
-            {bankingItems.map((item) => (
-              <div className="banking__item" key={item.id}>
-                <h3>{item.date}:</h3>
-                {item.deposit ? (
-                  <p className="transaction__deposit">+${item.amount}</p>
-                ) : (
-                  <p className="transaction__withdrawal">-${item.amount}</p>
-                )}
-              </div>
-            ))}
+            {displayItems}
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={changePage}
+              containerClassName={"paginationBttns"}
+              previousLinkClassName={"previousBttn"}
+              nextLinkClassName={"nextBttn"}
+              disabledClassName={"paginationDisabled"}
+              activeClassName={"paginationActive"}
+            />
           </div>
         </div>
       </div>

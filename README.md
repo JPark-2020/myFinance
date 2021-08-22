@@ -3,9 +3,6 @@
 
 Hosting URL: https://myfinance-e9800.firebaseapp.com/
 
-Note: Either React state updates or firebase queries do not seem to be working as well as they were prior to deployment. Will figure out soon. 
-
-
 ![Sample Dashboard](assets/images/sampleDashboard.png)
 
 

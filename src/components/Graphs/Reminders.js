@@ -57,7 +57,7 @@ const Reminders = () => {
     <div>
       <h4 className="chart__header">Reminders</h4>
       <div>
-        <form onSubmit={reminderSubmitHandler}>
+        <form className='reminderForm' onSubmit={reminderSubmitHandler}>
           <input
             type="text"
             value={note}
